@@ -1,0 +1,35 @@
+{
+  "name": "hax-antibot",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node dist/index.ts",
+    "lint": "eslint . --ext .ts",
+    "test": "mocha",
+    "build": "tsc"
+  },
+  "author": "Jakub Juszko",
+  "types": [
+    "haxball-headless-browser"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jakjus/hax-antibot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakjus/hax-antibot.git"
+  },
+  "description": "Antibot Plugin for Haxball Rooms",
+  "dependencies": {
+    "haxball.js": "^2.1.2"
+  },
+  "engines": {
+    "npm": ">=8.6.0",
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.2",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.25.2"
+  }
+}
