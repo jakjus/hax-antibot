@@ -1,5 +1,5 @@
 import HaxballJS from "haxball.js";
-import { initAntibot, antibot } from "../src/index"
+import { initAntibot, antibot } from "hax-antibot"
 
 const getRoom = async () => {
   const HBInit = await HaxballJS
