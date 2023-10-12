@@ -11,28 +11,10 @@ npm i hax-antibot
 Website documentation is available at [jakjus.github.io/hax-antibot/](https://jakjus.github.io/hax-antibot/)
 
 ## Usage
-1. Init Antibot as early as possible on your RoomObject 
-```
-const getStadium = initAntibot(room)
-```
+1. Init Antibot with `initAntibot(~)` as early as possible on your RoomObject. It will track script's stadium changes, so that it will turn back to the correct stadium after Antibot Map. 
 2. Choose which players to test
-```
-const playerIdsToCheck = room.getPlayerList().map(p => p.id)
-```
-
-3. Run Antibot
-```
-const result = await antibot(room, getStadium, playerIdsToCheck)
-```
-
-`result` will be an array of objects, consisting of Player ID's and if they failed the test:
-```
-[{ id: 2, failed: false}, { id: 5, failed: true }, ...]
-```
-4. Kick them (or do something else)
-```
-result.filter(p => p.failed).forEach(p => room.kickPlayer(p.id, "Failed reaching the green zone.", false))
-```
+3. Run `antibot(~)` on them
+4. Kick players that failed (or do something else)
 
 ## Example
 
