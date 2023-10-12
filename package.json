@@ -1,6 +1,6 @@
 {
   "name": "hax-antibot",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "dist/index.js",
   "scripts": {
     "start": "ts-node dist/index.ts",
@@ -10,7 +10,8 @@
   },
   "author": "Jakub Juszko",
   "types": [
-    "haxball-headless-browser"
+    "haxball-headless-browser",
+    "dist/index.d.ts"
   ],
   "license": "MIT",
   "homepage": "https://github.com/jakjus/hax-antibot#readme",
