@@ -1,6 +1,6 @@
 # Haxball Antibot
-Plugin for checking if player is a Bot. Creates a **random map challenge** to be solved by chosen players. To be used with node package [haxball.js](https://github.com/mertushka/haxball.js)
 ![Antibot Map](./images/map.png)
+Plugin for checking if player is a Bot. Creates a **random map challenge** to be solved by chosen players. To be used with node package [haxball.js](https://github.com/mertushka/haxball.js)
 
 ## Installation
 ```
