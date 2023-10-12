@@ -1,4 +1,5 @@
-import fs from "node:fs";
+import fs from "node:fs"
+import path from "node:path"
 
 interface Options {
   secondsToComplete: number
@@ -38,7 +39,8 @@ const antibot = async (room: RoomObject, getStadium: any, playerIds: number[], o
   }
   const greenZoneX = 160
   const { stadium, isCustom } = getStadium()
-  const antibotMap = fs.readFileSync("../maps/antibot.hbs").toString()
+  const mapPath = path.join(__dirname, '..', 'maps', 'antibot.hbs');
+  const antibotMap = fs.readFileSync(mapPath).toString()
   room.setCustomStadium(antibotMap)
   room.startGame()
 

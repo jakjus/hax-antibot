@@ -1,26 +1,3 @@
-# Haxball Antibot
-![Antibot Map](./images/map.png)
-Plugin for checking if player is a Bot. Creates a **random map challenge** to be solved by chosen players. To be used with node package [haxball.js](https://github.com/mertushka/haxball.js)
-
-## Installation
-```
-npm i hax-antibot
-```
-
-## Documentation
-Website documentation is available at [jakjus.github.io/hax-antibot/](https://jakjus.github.io/hax-antibot/)
-
-## Usage
-1. Init Antibot with `initAntibot(~)` as early as possible on your RoomObject. It will track script's stadium changes, so that it will turn back to the correct stadium after Antibot Map. 
-2. Choose which players to test
-3. Run `antibot(~)` on them
-4. Kick players that failed (or do something else)
-
-## Example
-
-```js
-// room.js
-
 const HaxballJS = require("haxball.js");
 const { initAntibot, antibot } = require("hax-antibot");
 
@@ -73,11 +50,3 @@ const run = async () => {
 }
 
 run()
-```
-
-This code is also in [room.ts](example/room.ts).
-
-## Build
-```
-npm run build
-```
