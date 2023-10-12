@@ -38,7 +38,7 @@ const antibot = async (room: RoomObject, getStadium: any, playerIds: number[], o
   }
   const greenZoneX = 160
   const { stadium, isCustom } = getStadium()
-  const antibotMap = fs.readFileSync("./maps/antibot.hbs").toString()
+  const antibotMap = fs.readFileSync("../maps/antibot.hbs").toString()
   room.setCustomStadium(antibotMap)
   room.startGame()
 

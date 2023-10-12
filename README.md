@@ -1,88 +1,87 @@
-# Haxball Standard Elo
-Plugin for calculating ranking points according to Elo system. To be used with node package [haxball.js](https://github.com/mertushka/haxball.js)
+# Haxball Antibot
+![Antibot Map](./images/map.png)
+Plugin for checking if player is a Bot. Creates a **random map challenge** to be solved by chosen players. To be used with node package [haxball.js](https://github.com/mertushka/haxball.js)
 
 ## Installation
 ```
-npm i hax-standard-elo
+npm i hax-antibot
 ```
 
 ## Documentation
-Website documentation is available at [jakjus.github.io/hax-standard-elo/](https://jakjus.github.io/hax-standard-elo/)
+Website documentation is available at [jakjus.github.io/hax-antibot/](https://jakjus.github.io/hax-antibot/)
 
 ## Usage
-Haxball rooms can use different kinds of data storage. It can be in-memory database, SQL database or other.
-
-To use the library, you have to implement the following interfaces:
-- `GetElo` - getting data of a player (including Elo) 
-- `ChangeElo` - changing data of a player
-
-You can find these definitions at [docs](https://jakjus.github.io/hax-standard-elo/).
-
-
-For SQL database, `getEloOfPlayer` could be:
-```js
-// ...init sqlite package and db
-
-const getEloOfPlayer = async (playerId) => 
-{ 
-  db.all(`SELECT elo FROM player WHERE playerId = ?`, [playerId], (err, rows) => {
-    rows.forEach((row) => return row.elo)
-  })
-}
-
-// do the same for changeEloOfPlayer
-// const changeEloOfPlayer = ...
+1. Init Antibot as early as possible on your RoomObject 
 ```
-Then, you pass these in `room.onTeamVictory` in `calculateChanges` and `execChanges`, as shown in an example below.
+const getStadium = initAntibot(room)
+```
+2. Choose which players to test
+```
+const playerIdsToCheck = room.getPlayerList().map(p => p.id)
+```
 
+3. Run Antibot
+```
+const result = await antibot(room, getStadium, playerIdsToCheck)
+```
+
+`result` will be an array of objects, consisting of Player ID's and if they failed the test:
+```
+[{ id: 2, failed: false}, { id: 5, failed: true }, ...]
+```
+4. Kick them (or do something else)
+```
+result.filter(p => p.failed).forEach(p => room.kickPlayer(p.id, "Failed reaching the green zone.", false))
+```
 
 ## Example
 
-The following example uses in-process memory within Haxball.js room script.
-
 ```js
-// room.js
-
-const HaxballJS = require("haxball.js");
-const { calculateChanges, execChanges } = require("hax-standard-elo");
+// room.ts
+import HaxballJS from "haxball.js";
+import { initAntibot, antibot } from "hax-antibot"
 
 const getRoom = async () => {
   const HBInit = await HaxballJS
   const room = HBInit({
     roomName: 'test',
-    token: 'yourtokenhere'
+    token: 'thr1.AAAAAGUoFkn6N1TdUatJBg.bS6fQZYprgM'
   })
   return room
 }
 
-// example of in-memory data storage
-const memory = {}
-
 const run = async () => {
   const room = await getRoom()
 
-  room.onPlayerJoin = (player) => {
-    room.setPlayerAdmin(player.id, true)
-    if (!memory[player.id]) {
-      memory[player.id] = {...player, elo: 1200}
-    }
+  // Call init once on your room before any stadium changing commands
+  const getStadium = initAntibot(room)
+
+  room.onPlayerJoin = (p) => {
+    room.setPlayerAdmin(p.id, true)
+  }
+  
+  room.onPlayerChat = () => {
+    performAntibot()
+    return true
   }
 
-  // implement get and change functions for our memory type
-  const getEloOfPlayer = async (playerId) => memory[playerId].elo
-  const changeEloOfPlayer = (playerId, change) => {
-    memory[playerId].elo += change
-  }
+  // Script changes the map
+  room.setDefaultStadium("Big")
 
-  room.onTeamVictory = async _ => {
-    try {
-      const changeList = await calculateChanges(room, getEloOfPlayer)
-      console.log(changeList)
-      await execChanges(changeList, getEloOfPlayer, changeEloOfPlayer)
-      console.log(memory)
-    } catch(e) {
-      console.log(e)
-    }
+
+  // Example of your antibot function
+  const performAntibot = async () => {
+    // Choose who to check. You may filter the players to choose only players which are not AFK.
+    const playerIdsToCheck = room.getPlayerList().map(p => p.id)
+
+    // Run Antibot
+    const result = await antibot(room, getStadium, playerIdsToCheck)
+
+    // Perform action depending on 
+    // You can choose what to do with failed player
+    result.filter(p => p.failed).forEach(p => room.kickPlayer(p.id, "Failed reaching the green zone.", false))
+
+    // Map will be changed back automatically. Set up the teams from remaining players and start the game.
   }
 
   room.onRoomLink = link => {
@@ -93,16 +92,9 @@ const run = async () => {
 run()
 ```
 
-The equivalent example for TypeScript is in [room.ts](example/room.ts).
-
-## Logic
-This library uses Elo rating system as shown in the [Wikipedia](https://en.wikipedia.org/wiki/Elo_rating_system). Elo was designed for *1v1* (2 entities competing against each other) with *no draws*. Therefore, to make it feasible in *many players* vs *many players* scenario, each player is changed using his *individual* elo and enemy *team average* elo. It helps having normally distributed Elo rankings across playerbase with smaller variance.
+This code is also in [room.ts](example/room.ts).
 
 ## Build
 ```
 npm run build
 ```
-
-## Sidenotes
-### Getting data
-For performance purposes, you may want to get all the players data in one query. Then `getEloOfPlayer` should read individual players Elo from parsed data.

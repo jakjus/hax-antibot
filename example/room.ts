@@ -35,11 +35,11 @@ const run = async () => {
     const playerIdsToCheck = room.getPlayerList().map(p => p.id)
 
     // Run Antibot
-    const toKick = await antibot(room, getStadium, playerIdsToCheck)
+    const result = await antibot(room, getStadium, playerIdsToCheck)
 
     // Perform action depending on 
     // You can choose what to do with failed player
-    toKick.filter(p => p.failed).forEach(p => room.kickPlayer(p.id, "Failed reaching the green zone.", false))
+    result.filter(p => p.failed).forEach(p => room.kickPlayer(p.id, "Failed reaching the green zone.", false))
 
     // Map will be changed back automatically. Set up the teams from remaining players and start the game.
   }
