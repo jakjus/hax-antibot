@@ -41,7 +41,6 @@ const antibot = async (room: RoomObject, getStadium: any, playerIds: number[], o
   const mapPath = path.join(__dirname, '..', 'maps', 'antibot.hbs');
   const antibotMap = fs.readFileSync(mapPath).toString()
   room.setCustomStadium(antibotMap)
-  room.startGame()
 
   const pidToTeam = {}
   room.getPlayerList().filter(p => playerIds.includes(p.id)).forEach(p => pidToTeam[p.id] = p.team)
