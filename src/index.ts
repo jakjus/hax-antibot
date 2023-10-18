@@ -25,7 +25,6 @@ const setBarriers = (room: RoomObject) => {
     const gap = Math.floor(Math.random()*rowSizeWithGap)
     for (let i = 0; i < rowSizeWithGap; i++) {
       if (i == gap) continue;
-      // @ts-ignore
       room.setDiscProperties(discIdToMove, { x: row.beginX, y: beginY+40*i })
       discIdToMove++
     }
@@ -51,7 +50,6 @@ const antibot = async (room: RoomObject, getStadium: any, playerIds: number[], o
   .filter(p => playerIds.includes(p.id))
   .forEach(p => {
     room.setPlayerTeam(p.id, 1)
-    // @ts-ignore
     room.setPlayerDiscProperties(p.id, {cGroup: room.CollisionFlags.c1})
   })
 
@@ -62,7 +60,9 @@ const antibot = async (room: RoomObject, getStadium: any, playerIds: number[], o
   }
   // Set teams back
   room.getPlayerList().forEach(p => room.setPlayerTeam(p.id, pidToTeam[p.id]))
-  const result = room.getPlayerList().filter(p => p.position).map(p => { return { id: p.id, failed: p.position.x < greenZoneX }})
+  const result = room.getPlayerList()
+  .filter(p => playerIds.includes(p.id))
+  .filter(p => p.position).map(p => { return { id: p.id, failed: p.position.x < greenZoneX }})
   room.stopGame()
   if (stadium) {
     isCustom ? 
